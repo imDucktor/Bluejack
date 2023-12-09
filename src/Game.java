@@ -1,18 +1,33 @@
-import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Game {
-    String[] cardColors = {"Red", "Blue", "Yellow", "Green"};
-    Random random = new Random();
-    Card[] gameDeck = new Card[40];
-    Card[] playerDeck = new Card[10];
-    Card[] computerDeck = new Card[10];
+    private final Random random = new Random();
+    private Card[] mainDeck;
+    private Card[] computerDeck;
+    private Card[] playerDeck;
+    private Player player;
+    private Player computer;
 
-    public Game(){
-        initDecks();
-//        System.out.println(Arrays.toString(computerDeck));
-        for (int i=0;i<=39;i++) {
-            System.out.println(gameDeck[i].getCardInfo());
+    public Game() {
+        startGame();
+//        for (int i=0;i<=39;i++) {
+//            System.out.println(mainDeck[i].getCardInfo());
+//        }
+//        System.out.println("######");
+////        shuffle_mainDeck();
+//        for (int i=0;i<=39;i++) {
+//            System.out.println(mainDeck[i].getCardInfo());
+//        }
+////        System.out.println("######");
+////        System.out.println(removeCardWithIndex(4).getCardInfo());
+////        System.out.println(removeCardWithIndex(5).getCardInfo());
+////        System.out.println("######");
+//        for (int i=0;i<=37;i++) {
+//            System.out.println(mainDeck[i].getCardInfo());
+//        }
+        for (int i=0;i<=20;i++) {
+            System.out.println(mainDeck[i].getCardInfo());
         }
         System.out.println("########");
         for (int i=0;i<=9;i++) {
@@ -22,71 +37,71 @@ public class Game {
         for (int i=0;i<=9;i++) {
             System.out.println(computerDeck[i].getCardInfo());
         }
-//        System.out.println(Arrays.toString(playerDeck));
-//        System.out.println(Arrays.toString(gameDeck));
-
     }
 
-    private void arrayCopy(Card[] deck,Card[] newDeck){
-        for(int i=0; i<deck.length;i++){
-            if(i<newDeck.length) {deck[i] = newDeck[i];} else {deck[i].freeCard();}
-        }
-    }
+    public void create_mainDeck() {
+        String[] cardColors = new String[]{"Red", "Blue", "Green", "Yellow"};
+        final int TOTAL_NUMBER_OF_CARDS = 40;
+        mainDeck = new Card[TOTAL_NUMBER_OF_CARDS];
 
-    private void removeCard(Card[] deck, int index) {
-        Card[] newDeck = new Card[deck.length - 1];
-        for (int i = 0, k = 0; i < deck.length; i++) {
-            if (i != index) {
-                newDeck[k] = deck[i];
-                k++;
-            }
-        }
-        arrayCopy(gameDeck, newDeck);
-    }
-    private Card useAndRemoveCard(Card[] deck) {
-        Card tempValue = deck[0];
-        Card[] newDeck = new Card[deck.length - 1];
-        for(int i = 0; i < deck.length-1; i++) {newDeck[i] = deck[i+1];}
-        arrayCopy(gameDeck, newDeck);
-        return tempValue;
-    }
-    private void create_gameDeck() {
         for (int i = 1, k = 0; i <= 10; i++) {
             for (String color : cardColors) {
-                gameDeck[k] = new Card(i, color, false, false, false);
+                mainDeck[k] = new Card(i, color, false, false, false);
                 k++;
             }
         }
-
     }
-    private void shuffle(Card[] deck) {
+    public void shuffle_mainDeck() {
         for (int i = 0; i < 150; i++) {
-            int f = random.nextInt(deck.length);
-            int k = random.nextInt(deck.length);
-            Card temp = deck[k];
-            deck[k] = deck[f];
-            deck[f] = temp;
+            int m = random.nextInt(mainDeck.length);
+            int n = random.nextInt(mainDeck.length);
+            Card temp = mainDeck[n];
+            mainDeck[n] = mainDeck[m];
+            mainDeck[m] = temp;
         }
+    }
+    public Card useAndRemoveCard() {
+        Card temp = mainDeck[0];
+        Card[] tempDeck = new Card[mainDeck.length - 1];
+        for (int i = 1; i < mainDeck.length; i++) {
+            tempDeck[i - 1] = mainDeck[i];
+        }
+        mainDeck = tempDeck;
+        return temp;
+    }
+    public Card removeCardWithIndex(int index) {
+        Card temp = mainDeck[index];
+        Card[] tempDeck = new Card[mainDeck.length - 1];
+        for (int i = 0, k = 0; i < mainDeck.length; i++) {
+            if (i != index) {
+                tempDeck[k] = mainDeck[i];
+                k++;
+            }
+        }
+        mainDeck = tempDeck;
+        return temp;
     }
     private void createFirstFiveCards() {
         for (int i = 0; i < 5; i++) {
-            computerDeck[i] = useAndRemoveCard(gameDeck);
-            playerDeck[i] = gameDeck[gameDeck.length - 1];
-            removeCard(gameDeck, gameDeck.length - 1);
+            Card tempComputerCard = new Card(useAndRemoveCard());
+            computerDeck[i] = tempComputerCard;
+            Card tempPlayerCard = new Card(removeCardWithIndex(mainDeck.length-i-1));
+            playerDeck[i] = tempPlayerCard;
         }
     }
     private void createThreeCards(Card[] deck) {
         for (int i = 5; i < 8; i++) {
-            int value, index;
+            int value,k = 0;
             String color;
             do {
-                index = random.nextInt(deck.length-i);
-                value = gameDeck[index].getValue();
-                color = gameDeck[index].getColor();
+                value = mainDeck[k].getValue();
+                color = mainDeck[k].getColor();
+                k++;
             } while (value > 6);
-            removeCard(gameDeck, index);
+            Card tempCard = new Card(removeCardWithIndex(k));
             boolean sign = random.nextBoolean();
-            deck[i] = new Card(value, color, sign, false, false);
+            deck[i] = tempCard;
+            deck[i].setSign(sign);
         }
     }
     private void createLastTwoCard(Card[] deck) {
@@ -95,7 +110,8 @@ public class Game {
             deck[8] = card;
         }else {
             boolean sign = random.nextBoolean();
-            deck[8] = useAndRemoveCard(gameDeck);
+            Card cardEight = useAndRemoveCard();
+            deck[8] = cardEight;
             deck[8].setSign(sign);
         }
         if (random.nextInt(5) == 0) {
@@ -103,19 +119,19 @@ public class Game {
             deck[9] = card;
         }else {
             boolean sign = random.nextBoolean();
-            deck[9] = useAndRemoveCard(gameDeck);
+            Card cardNine = useAndRemoveCard();
+            deck[9] = cardNine;
             deck[9].setSign(sign);
         }
     }
-    public void initDecks(){
-        for (int i = 1, k =0; i <= 10; i++) {
-            for (String color : cardColors) {
-                gameDeck[k] = new Card(i, color, false, false, false);
-                k++;
-            }
-        }
-        create_gameDeck();
-        shuffle(gameDeck);
+    public void startGame() {
+        player = new Player();
+        computer = new Player();
+        final int TOTAL_NUMBER_OF_CARDS_ON_PLAYERS_DECK = 10;
+        computerDeck = new Card[TOTAL_NUMBER_OF_CARDS_ON_PLAYERS_DECK];
+        playerDeck = new Card[TOTAL_NUMBER_OF_CARDS_ON_PLAYERS_DECK];
+        create_mainDeck();
+        shuffle_mainDeck();
         createFirstFiveCards();
         createThreeCards(computerDeck);
         createThreeCards(playerDeck);

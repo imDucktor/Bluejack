@@ -21,6 +21,14 @@ public class Card {
         this.isDouble = isDouble;
     }
 
+    public Card(Card newCard) {
+        this.value = newCard.getValue();;
+        this.color = newCard.getColor();
+        this.sign = newCard.getSign();
+        this.isFlip = newCard.isFlip();
+        this.isDouble = newCard.isDouble();
+    }
+
     public void freeCard(){
         this.value = 0;
         this.color = null;
