@@ -3,17 +3,7 @@ public class Player {
     private Card[] board = new Card[9];
     int score =0;
 
-    public Card[] getHand()
-    {
-        return hand;
-    }
-    public void setScore(int score)
-    {
-        this.score+=score;
-    }
-    public int getScore()
-    {
-        return score;
-    }
+    public Card[] getHand() {return hand;}
+    public Card getCard(int index) {return hand[index-1];}
 }
 
