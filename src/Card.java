@@ -29,9 +29,9 @@ public class Card {
         this.isDouble = newCard.isDouble();
     }
 
-    public void freeCard(){
+    public void usedCard(){
         this.value = 0;
-        this.color = null;
+        this.color = "X";
         this.sign = false;
         this.isFlip = false;
         this.isDouble = false;
@@ -39,12 +39,10 @@ public class Card {
 
     public String getCardInfo(){
         if(!isFlip && !isDouble) {
-            return this.getColor() + " " + this.getValue();
-        }else if(isFlip){
-            return "-/+";
-        }else{
-            return "x2";
-        }
+            if(this.value!=0) {return this.getColor() + " " + this.getValue();}
+            else {return this.getColor();}
+        }else if(isFlip){return "-/+";}
+        else{return "x2";}
     }
 
     public int getValue() {

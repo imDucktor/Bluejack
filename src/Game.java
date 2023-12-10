@@ -24,7 +24,7 @@ public class Game {
         }
     }
 
-    public void create_mainDeck() {
+    private void create_mainDeck() {
         String[] cardColors = new String[]{"Red", "Blue", "Green", "Yellow"};
         final int TOTAL_NUMBER_OF_CARDS = 40;
         mainDeck = new Card[TOTAL_NUMBER_OF_CARDS];
@@ -36,7 +36,7 @@ public class Game {
             }
         }
     }
-    public void shuffle_mainDeck() {
+    private void shuffle_mainDeck() {
         for (int i = 0; i < 150; i++) {
             int m = random.nextInt(mainDeck.length);
             int n = random.nextInt(mainDeck.length);
@@ -45,7 +45,7 @@ public class Game {
             mainDeck[m] = temp;
         }
     }
-    public Card useCardFromMain() {
+    private Card useCardFromMain() {
         Card temp = mainDeck[0];
         Card[] tempDeck = new Card[mainDeck.length - 1];
         for (int i = 1; i < mainDeck.length; i++) {
@@ -54,7 +54,7 @@ public class Game {
         mainDeck = tempDeck;
         return temp;
     }
-    public Card removeCardWithIndexFromMain(int index) {
+    private Card removeCardWithIndexFromMain(int index) {
         Card temp = mainDeck[index];
         Card[] tempDeck = new Card[mainDeck.length - 1];
         for (int i = 0, k = 0; i < mainDeck.length; i++) {
@@ -109,6 +109,24 @@ public class Game {
             deck[9].setSign(sign);
         }
     }
+    private Card useCardFromComputer() {
+        Card temp = computerDeck[0];
+        Card[] tempDeck = new Card[computerDeck.length - 1];
+        for (int i = 1; i < computerDeck.length; i++) {
+            tempDeck[i - 1] = computerDeck[i];
+        }
+        computerDeck = tempDeck;
+        return temp;
+    }
+    private Card useCardFromPlayer() {
+        Card temp = playerDeck[0];
+        Card[] tempDeck = new Card[playerDeck.length - 1];
+        for (int i = 1; i < playerDeck.length; i++) {
+            tempDeck[i - 1] = playerDeck[i];
+        }
+        playerDeck = tempDeck;
+        return temp;
+    }
     private void chooseFourCards() {
         for (int i = 0; i < 50; i++) {
             int m = random.nextInt(playerDeck.length);
@@ -118,7 +136,7 @@ public class Game {
             playerDeck[m] = temp;
         }
         for (int i = 0; i < 4; i++){
-            Card tempCard = playerDeck[i];
+            Card tempCard = useCardFromPlayer();
             player.getHand()[i] = tempCard;
         }
         for (int i = 0; i < 50; i++) {
@@ -129,11 +147,12 @@ public class Game {
             playerDeck[m] = temp;
         }
         for (int i = 0; i < 4; i++){
-            Card tempCard = computerDeck[i];
+            Card tempCard = useCardFromComputer();
             computer.getHand()[i] = tempCard;
         }
     }
-    public void startGame() {
+
+    private void startGame() {
         player = new Player();
         computer = new Player();
         final int TOTAL_NUMBER_OF_CARDS_ON_PLAYERS_DECK = 10;
