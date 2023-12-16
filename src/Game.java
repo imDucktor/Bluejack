@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Game {
     private final Random random = new Random();
@@ -8,7 +9,7 @@ public class Game {
     private Card[] playerDeck;
     private Player player;
     private Player computer;
-
+    private Scanner sc = new Scanner(System.in);
     public Game() {
         startGame();
         for (int i=0;i<=20;i++) {
@@ -109,7 +110,7 @@ public class Game {
             deck[9].setSign(sign);
         }
     }
-    private Card useCardFromComputer() {
+    private Card useCardFromComputerDeck() {
         Card temp = computerDeck[0];
         Card[] tempDeck = new Card[computerDeck.length - 1];
         for (int i = 1; i < computerDeck.length; i++) {
@@ -118,7 +119,7 @@ public class Game {
         computerDeck = tempDeck;
         return temp;
     }
-    private Card useCardFromPlayer() {
+    private Card useCardFromPlayerDeck() {
         Card temp = playerDeck[0];
         Card[] tempDeck = new Card[playerDeck.length - 1];
         for (int i = 1; i < playerDeck.length; i++) {
@@ -136,7 +137,7 @@ public class Game {
             playerDeck[m] = temp;
         }
         for (int i = 0; i < 4; i++){
-            Card tempCard = useCardFromPlayer();
+            Card tempCard = useCardFromPlayerDeck();
             player.getHand()[i] = tempCard;
         }
         for (int i = 0; i < 50; i++) {
@@ -147,11 +148,123 @@ public class Game {
             playerDeck[m] = temp;
         }
         for (int i = 0; i < 4; i++){
-            Card tempCard = useCardFromComputer();
+            Card tempCard = useCardFromComputerDeck();
             computer.getHand()[i] = tempCard;
         }
     }
+    public void writeStatus(){
+        computer.writeHand();
+        computer.writeBoard();
+        System.out.println("———————————————————————————————————");
+        player.writeBoard();
+        player.writeHand();
+    }
+    public void playCardFromPlayerHand() {
+        boolean isntChoose = true;
+        int action = 0;
+        while (isntChoose){
+            System.out.println("Choose your card to play:");
+            player.writeHand();
+            try{
+                action = sc.nextInt();
+            }catch (Exception e){
+                System.out.println("Please choose a card.");
+            }
+            if(action>=1 && action<=4) {isntChoose = false;}
+            else {System.out.println("Please choose a card.");}
+        }
+        player.addToBoard(player.getHand()[action-1],player.getAndIncreaseCardNumber());
+        player.getHand()[action].usedCard();
+        writeStatus();
+    }
+    public void playForPlayer(){
+        writeStatus();
+        System.out.println(player.getName() + "'s turn");
+        if(player.getCardNumber()<8){
+            int actionForCard = 0;
+            boolean isNo = true;
+            while (isNo) {
+                System.out.println("Would you like a new card to be placed on the board?\n1. Yes\n2. No");
+                try {
+                    actionForCard = sc.nextInt();
+                } catch (Exception e) {
+                    System.out.println("Please choose an action.");
+                }
+                if (actionForCard >= 1 && actionForCard <= 2) {
+                    isNo = false;
+                } else {
+                    System.out.println("Please choose an action.");
+                }
+            }
+            if (actionForCard == 1) {player.addToBoard(useCardFromMain(), player.getAndIncreaseCardNumber());}
+        }else {System.out.println("You can't request more cards.");}
 
+        writeStatus();
+
+        boolean isntChoose = true;
+        int action = 0;
+        while (isntChoose){
+            System.out.println("Choose your action:\n1. Play\n2. End\n 3. Stand");
+            try{
+                action = sc.nextInt();
+            }catch (Exception e){
+                System.out.println("Please choose an action.");
+            }
+            if(action>=1 && action<=3) {isntChoose = false;}
+            else {System.out.println("Please choose an action.");}
+        }
+        switch(action){
+            case 1:
+                System.out.println(player.getName() + "is playing...");
+                playCardFromPlayerHand();
+                break;
+            case 2:
+                System.out.println("End of this turn for " + player.getName() + ".");
+                break;
+            case 3:
+                System.out.println(player.getName() + "chose to stand.");
+                player.set_isCont(false);
+                break;
+        }
+    }
+    public void playForComputer(){
+        System.out.println("Computer's turn");
+        if(player.getCardNumber()<8){
+            int actionForCard = 0;
+            boolean isNo = true;
+            while (isNo) {
+                System.out.println("Would you like a new card to be placed on the board?\n1. Yes\n2. No");
+                try {
+                    actionForCard = sc.nextInt();
+                } catch (Exception e) {
+                    System.out.println("Please choose an action.");
+                }
+                if (actionForCard >= 1 && actionForCard <= 2) {
+                    isNo = false;
+                } else {
+                    System.out.println("Please choose an action.");
+                }
+            }
+            if (actionForCard == 1) {player.addToBoard(useCardFromMain(), player.getAndIncreaseCardNumber());}
+        }else {System.out.println("You can't request more cards.");}
+
+        writeStatus();
+
+        if(computer.getSumOfBoard())
+        switch(action){
+            case 1:
+                System.out.println(player.getName() + "is playing...");
+                playCardFromPlayerHand();
+                break;
+            case 2:
+                System.out.println("End of this turn for " + player.getName() + ".");
+                break;
+            case 3:
+                System.out.println(player.getName() + "chose to stand.");
+                player.set_isCont(false);
+                break;
+        }
+    }
     private void startGame() {
         player = new Player();
         computer = new Player();

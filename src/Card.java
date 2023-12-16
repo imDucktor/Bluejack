@@ -53,6 +53,10 @@ public class Card {
         this.value *= 2;
     }
 
+    public void flipValue(){
+        this.value *= -1;
+    }
+
     public String getColor() {return color;}
 
     public boolean getSign() {return sign;}
