@@ -4,21 +4,24 @@ public class Card {
     private boolean sign;
     private boolean isFlip;
     private boolean isDouble;
+    private boolean isUsed;
 
-    public Card(int value, String color, boolean sign, boolean isFlip, boolean isDouble) {
+    public Card(int value, String color, boolean sign, boolean isFlip, boolean isDouble,boolean isUsed) {
         this.value = value;
         this.color = color;
         this.sign = sign;
         this.isFlip = isFlip;
         this.isDouble = isDouble;
+        this.isUsed = isUsed;
     }
 
-    public void setCard(int value, String color, boolean sign, boolean isFlip, boolean isDouble) {
+    public void setCard(int value, String color, boolean sign, boolean isFlip, boolean isDouble, boolean isUsed){
         this.value = value;
         this.color = color;
         this.sign = sign;
         this.isFlip = isFlip;
         this.isDouble = isDouble;
+        this.isUsed = isUsed;
     }
 
     public Card(Card newCard) {
@@ -30,12 +33,10 @@ public class Card {
     }
 
     public void usedCard(){
-        this.value = 0;
-        this.color = "X";
-        this.sign = false;
-        this.isFlip = false;
-        this.isDouble = false;
+        this.isUsed = true;
     }
+
+    public boolean isUsed(){return this.isUsed;}
 
     public String getCardInfo(){
         if(!isFlip && !isDouble) {
