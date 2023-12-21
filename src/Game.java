@@ -238,11 +238,13 @@ public class Game {
         writeStatus();
         System.out.println("Computer's turn");
         int sum = computer.getSumOfBoard();
+        System.out.println(sum);
         if (sum <= 15) {
             computer.addToBoard(useCardFromMain(), computer.getAndIncreaseCardNumber());
             computer.setNoAction(false);
         }
         sum = computer.getSumOfBoard();
+        System.out.println(sum);
         int max = sum;
         int maxIndex = -1;
         for (int i = 0; i <= 3; i++) {
@@ -393,18 +395,18 @@ public class Game {
             if(player.get_isCont()){
                 playForPlayer();
                 if (player.getSumOfBoard() > 20) {
-                    computer.setScore(computer.getScore() + 1);
+                    computer.incScore();
                     System.out.println(player.getName() + "busted!");
                     break;
                 }
             }
             if(computer.get_isCont()) {
                 playForComputer();
-                if(computer.getSumOfBoard() == 20 && computer.isNoAction()){
+                if(computer.getSumOfBoard() == 20 || computer.isNoAction()){
                    computer.set_isCont(false);
                 }else if (computer.getSumOfBoard() > 20) {
                     System.out.println("Computer busted!");
-                    player.setScore(computer.getScore() + 1);
+                    player.incScore();
                     break;
                 }
             }

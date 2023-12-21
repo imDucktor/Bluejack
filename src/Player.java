@@ -73,7 +73,7 @@ public class Player {
         public int getSumOfBoard(){
             int sum = 0;
             for (int i=0; i<cardNumber+1; i++){
-                sum=+board[i].getValue();
+                sum+=board[i].getValue();
             }
             return sum;
         }
@@ -91,7 +91,7 @@ public class Player {
     public void setLocationOfLastPlayedCard(Card locationOfLastPlayedCard) {LocationOfLastPlayedCard = locationOfLastPlayedCard;}
 
     public int getScore() {return score;}
-    public void setScore(int score) {this.score = score;}
+    public void incScore() {this.score += 1;}
 
     public void setNoAction(boolean noAction) {this.noAction = noAction;}
     public boolean isNoAction() {return noAction;}
