@@ -239,6 +239,7 @@ public class Game {
         System.out.println("\n" + player.getName() + "'s turn\n");
         if (player.getCardNumber() < 8) {
             int actionForCard;
+            sc.nextLine();
             while (true) {
                 try {
                     System.out.println("Would you like a new card to be placed on the board?\n1. Yes\n2. No");
