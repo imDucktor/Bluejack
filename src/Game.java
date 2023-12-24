@@ -16,6 +16,7 @@ public class Game {
     private Scanner sc = new Scanner(System.in);
     private int setNo = 1;
     private String[][] Scores;
+    private boolean isFirst=true;
 
     private void create_mainDeck() {
         String[] cardColors = new String[]{"Red", "Blue", "Green", "Yellow"};
@@ -239,6 +240,10 @@ public class Game {
         System.out.println("\n" + player.getName() + "'s turn\n");
         if (player.getCardNumber() < 8) {
             int actionForCard;
+            if(!isFirst) {
+                System.out.println("Press any key to continue.");
+            }
+            if (isFirst){isFirst=false;}
             sc.nextLine();
             while (true) {
                 try {
