@@ -14,9 +14,8 @@ public class Game {
     private Player computer;
     private Scanner sc = new Scanner(System.in);
     private int setNo = 1;
-    private String Scores[][];
+    private String[][] Scores;
     public Game() {
-        startGame();
         gameLoop();
     }
 
@@ -157,19 +156,21 @@ public class Game {
         System.out.println("———————————————————————————————————");
     }
     private void playCardFromPlayerHand() {
-        boolean isntChoose = true;
         int action = 0;
-        while (isntChoose){
+        while (true){
             System.out.println("Choose your card to play:");
             player.writeHand(false);
             try{
-                action = sc.nextInt();
+                action = Integer.parseInt(sc.nextLine());
+                if(action>=1 && action<=4) {break;}
+                else {System.out.println("Please choose a card.");}
             }catch (Exception e){
                 System.out.println("Please choose a card.");
+                continue;
             }
-            if(action>=1 && action<=4) {isntChoose = false;}
-            else {System.out.println("Please choose a card.");}
-        }
+            }
+            //
+
         if(player.getHand()[action-1].isFlip()){
             player.getLocationOfLastPlayedCard().flipValue();
             player.addToBoard(player.getHand()[action-1],player.getAndIncreaseCardNumber());
@@ -180,6 +181,7 @@ public class Game {
             player.getHand()[action-1].usedCard();
         }else {
             player.addToBoard(player.getHand()[action - 1], player.getAndIncreaseCardNumber());
+            player.setLocationOfLastPlayedCard(player.getHand()[action-1]);
             player.getHand()[action-1].usedCard();
         }
         writeStatus();
@@ -188,67 +190,68 @@ public class Game {
         writeStatus();
         System.out.println("\n" + player.getName() + "'s turn\n");
         if(player.getCardNumber()<8){
-            int actionForCard = 0;
-            boolean isNo = true;
-            while (isNo) {
-                System.out.println("Would you like a new card to be placed on the board?\n1. Yes\n2. No");
+            int actionForCard;
+            while (true) {
                 try {
-                    actionForCard = sc.nextInt();
+                    System.out.println("Would you like a new card to be placed on the board?\n1. Yes\n2. No");
+                    actionForCard = Integer.parseInt(sc.nextLine());
+                    if (actionForCard >= 1 && actionForCard <= 2) {
+                        break;
+                    } else {
+                        System.out.println("Please choose an action.");
+                    }
                 } catch (Exception e) {
                     System.out.println("Please choose an action.");
+                    continue;
                 }
-                if (actionForCard >= 1 && actionForCard <= 2) {
-                    isNo = false;
-                } else {
-                    System.out.println("Please choose an action.");
-                }
+
             }
             if (actionForCard == 1) {player.addToBoard(useCardFromMain(), player.getAndIncreaseCardNumber());}
         }else {System.out.println("You can't request more cards.");}
 
         writeStatus();
 
-        boolean isntChoose = true;
+
         int action = 0;
-        while (isntChoose){
+        while (true){
             System.out.println("Choose your action:\n1. Play\n2. End\n 3. Stand");
             try{
-                action = sc.nextInt();
+                action = Integer.parseInt(sc.nextLine());
+                if(action>=1 && action<=3) {break;}
+                else {System.out.println("Please choose an action.");}
             }catch (Exception e){
                 System.out.println("Please choose an action.");
+                continue;
             }
-            if(action>=1 && action<=3) {isntChoose = false;}
-            else {System.out.println("Please choose an action.");}
         }
         switch(action){
             case 1:
-                System.out.println(player.getName() + "is playing...");
+                System.out.println(player.getName() + " is playing...");
                 playCardFromPlayerHand();
                 break;
             case 2:
                 System.out.println("End of this turn for " + player.getName() + ".");
                 break;
             case 3:
-                System.out.println(player.getName() + "chose to stand.");
+                System.out.println(player.getName() + " chose to stand.");
                 player.set_isCont(false);
                 break;
         }
     }
     private void playForComputer() {
-        writeStatus();
         System.out.println("Computer's turn");
+        writeStatus();
+        computer.setNoAction(true);
         int sum = computer.getSumOfBoard();
-        System.out.println(sum);
         if (sum <= 15) {
             computer.addToBoard(useCardFromMain(), computer.getAndIncreaseCardNumber());
             computer.setNoAction(false);
         }
         sum = computer.getSumOfBoard();
-        System.out.println(sum);
         int max = sum;
         int maxIndex = -1;
         for (int i = 0; i <= 3; i++) {
-            if (computer.getHand()[i].getColor() == "X") {
+            if (computer.getHand()[i].isUsed() == true) {
                 break;
             } else if (max == 20) {
                 break;
@@ -319,8 +322,32 @@ public class Game {
                 computer.setNoAction(false);
             }
         }
+        System.out.println("Computer played.");
+    }
+    private void playerCount(){
+        Scanner reader = null;
+        String thisLine = "";
+        int playerCount=0;
+        try {
+            reader = new Scanner(Paths.get("C:\\Users\\13sam\\Desktop\\Bluejack-Game\\history.txt"));
+            while (reader.hasNextLine()) {
+                playerCount++;
+                reader.nextLine();
+            }if(playerCount>=10) {
+                playerCount=10;
+                Scores = new String[playerCount][3];
+            }else {
+                Scores = new String[playerCount + 1][3];
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null)
+                reader.close();
+        }
     }
     private void history() {
+        playerCount();
         Formatter formatter = null;
         FileWriter fileWriter = null;
         Scanner reader = null;
@@ -329,11 +356,12 @@ public class Game {
         try {
             reader = new Scanner(Paths.get("C:\\Users\\13sam\\Desktop\\Bluejack-Game\\history.txt"));
             while (reader.hasNextLine()) {
+
                 thisLine = reader.nextLine();
-                String[] info = thisLine.split(",");
-                Scores[counter][0] = info[0];
-                Scores[counter][1] = info[1];
-                Scores[counter][2] = info[2];
+                String[] temp = thisLine.split(",");
+                Scores[counter][0] = temp[0];
+                Scores[counter][1] = temp[1];
+                Scores[counter][2] = temp[2];
                 counter++;
             }
         } catch (IOException e) {
@@ -342,6 +370,16 @@ public class Game {
             if (reader != null)
                 reader.close();
         }
+        if(Scores.length==10){
+            String[][] tempScores = new String[Scores.length][3];
+            for (int i = 1; i < Scores.length; i++) {
+                for (int j = 0; j < 3; j++) {
+                    tempScores[i - 1][j] = Scores[i][j];
+                }
+            }
+            Scores = tempScores;
+            counter=9;
+        }
         Scores[counter][0] = player.getName();
         Scores[counter][1] = Integer.toString(player.getScore());
         Scores[counter][2] = Integer.toString(computer.getScore());
@@ -349,7 +387,7 @@ public class Game {
             fileWriter = new FileWriter("history.txt", false);
             formatter = new Formatter(fileWriter);
             for (int i = 0; i < Scores.length; i++) {
-                formatter.format("%s,%s\n", Scores[i][0], Scores[i][1]);
+                formatter.format("%s,%s,%s\n", Scores[i][0], Scores[i][1], Scores[i][2]);
             }
             fileWriter.close();
         } catch (Exception e) {
@@ -364,8 +402,8 @@ public class Game {
         history();
         System.out.println("Game history:");
         for (int i = 0; i < Scores.length; i++) {
-            if (Scores[i][1] != null&&Scores[i][2] != null) {
-                System.out.println(Scores[i][0] + ": " + Scores[i][1] + "Computer: " + Scores[i][2]);
+            if (!(Scores[i][0] == null)) {
+                System.out.println(Scores[i][0] + ": " + Scores[i][1] + " | Computer: " + Scores[i][2]);
             }
         }
     }
@@ -389,13 +427,16 @@ public class Game {
         chooseFourCards();
     }
     private void playSet(){
-        System.out.println("Set " + setNo + "started!");
-        setNo++;
+        boolean isBusted = false;
+        System.out.println("Press any key to start.");
+        sc.next();
+        System.out.println("\nSet " + setNo + " started!\n");
         while(computer.get_isCont()||player.get_isCont()){
             if(player.get_isCont()){
                 playForPlayer();
                 if (player.getSumOfBoard() > 20) {
                     computer.incScore();
+                    isBusted = true;
                     System.out.println(player.getName() + "busted!");
                     break;
                 }
@@ -406,16 +447,32 @@ public class Game {
                    computer.set_isCont(false);
                 }else if (computer.getSumOfBoard() > 20) {
                     System.out.println("Computer busted!");
+                    isBusted = true;
                     player.incScore();
                     break;
                 }
             }
         }
-        System.out.println("END OF SET " + setNo);
-        System.out.println("Your score: " + player.getScore());
-        System.out.println("Computer's score: " + computer.getScore());
+        if(!isBusted){
+            if (player.getSumOfBoard()>computer.getSumOfBoard()){
+                player.incScore();
+                System.out.println("\n" + player.getName() + " won this set");
+            }else if (player.getSumOfBoard()<computer.getSumOfBoard()){
+            computer.incScore();
+                System.out.println("\nComputer won this set");
+            }else if (player.getSumOfBoard()==computer.getSumOfBoard()){
+                System.out.println("\nDraw. Nobody won this set.");
+            }
+        }
+        System.out.println("\nEND OF SET " + setNo);
+        System.out.println("\nYour score: " + player.getScore());
+        System.out.println("Computer's score: " + computer.getScore() + "\n");
+        setNo++;
+        player.reset();
+        computer.reset();
     }
-    private void gameLoop(){
+    public void gameLoop(){
+        startGame();
         while(!(computer.getScore()==3||player.getScore()==3)){
             playSet();
         }

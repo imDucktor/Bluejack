@@ -1,12 +1,12 @@
 
 public class Player {
-    private String name;
+    private String name = "";
     private Card[] hand = new Card[4];
     private Card[] board = new Card[9];
     private int cardNumber = -1;
     private int score = 0;
     private boolean isCont = true;
-    private boolean noAction = true;
+    private boolean noAction = false;
     private Card LocationOfLastPlayedCard = null;
 
     public void setName(String name) { this.name = name;}
@@ -59,7 +59,7 @@ public class Player {
                 }
             }
         }
-        public void writeBoard(){
+        public void writeBsoard(){
 
             for (int i=0; i<9; i++){
                 if(i==0) {System.out.print(name + "'s board: ");}
@@ -80,9 +80,13 @@ public class Player {
         public Card getCard(int index) {return hand[index-1];}
         public Card[] getBoard() {return board;}
         public void addToBoard(Card card, int index) {this.board[index] = card;}
+
         public void reset(){
-            hand = new Card[4];
             board = new Card[9];
+            cardNumber = -1;
+            isCont = true;
+            noAction = true;
+            LocationOfLastPlayedCard = null;
         }
         public void set_isCont(boolean isCont) {this.isCont=isCont;}
         public boolean get_isCont() {return isCont;}
