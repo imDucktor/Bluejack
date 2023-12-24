@@ -1,0 +1,3 @@
+Samet SARIKAYA
+    SE115 Section 3
+    20230601059
