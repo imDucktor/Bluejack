@@ -15,15 +15,6 @@ public class Card {
         this.isUsed = isUsed;
     }
 
-    public void setCard(int value, String color, boolean sign, boolean isFlip, boolean isDouble, boolean isUsed) {
-        this.value = value;
-        this.color = color;
-        this.sign = sign;
-        this.isFlip = isFlip;
-        this.isDouble = isDouble;
-        this.isUsed = isUsed;
-    }
-
     public Card(Card newCard) {
         this.value = newCard.getValue();
         this.color = newCard.getColor();
@@ -62,14 +53,6 @@ public class Card {
         }
     }
 
-    public void doubleValue() {
-        this.value *= 2;
-    }
-
-    public void flipValue() {
-        this.value *= -1;
-    }
-
     public String getColor() {
         return color;
     }
@@ -88,5 +71,13 @@ public class Card {
 
     public boolean isDouble() {
         return isDouble;
+    }
+
+    public void doubleValue() {
+        this.value *= 2;
+    }
+
+    public void flipValue() {
+        this.value *= -1;
     }
 }

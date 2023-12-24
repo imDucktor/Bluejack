@@ -1,7 +1,7 @@
 
 public class Player {
     private String name = "";
-    private Card[] hand = new Card[4];
+    private final Card[] hand = new Card[4];
     private Card[] board = new Card[9];
     private int cardNumber = -1;
     private int score = 0;
@@ -28,19 +28,6 @@ public class Player {
     public int getAndIncreaseCardNumber() {
         cardNumber++;
         return cardNumber;
-    }
-
-    public Card removeCardWithIndexFromHand(int index) {
-        Card temp = hand[index];
-        Card[] tempHand = new Card[hand.length - 1];
-        for (int i = 0, k = 0; i < hand.length; i++) {
-            if (i != index) {
-                tempHand[k] = hand[i];
-                k++;
-            }
-        }
-        hand = tempHand;
-        return temp;
     }
 
     public void writeHand(boolean isComp) {
@@ -103,14 +90,6 @@ public class Player {
             sum += board[i].getValue();
         }
         return sum;
-    }
-
-    public Card getCard(int index) {
-        return hand[index - 1];
-    }
-
-    public Card[] getBoard() {
-        return board;
     }
 
     public void addToBoard(Card card, int index) {
