@@ -1,4 +1,8 @@
 
+/**
+ * Represents a player in the Bluejack game.
+ * Each player has a hand of cards, a board, and a score.
+ */
 public class Player {
     private String name = "";
     private final Card[] hand = new Card[4];
@@ -9,27 +13,56 @@ public class Player {
     private boolean noAction = false;
     private Card LocationOfLastPlayedCard = null;
 
+    /**
+     * Sets the player's name.
+     * 
+     * @param name The player's name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the player's name.
+     * 
+     * @return The player's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the player's hand.
+     * 
+     * @return The player's hand as an array of Cards
+     */
     public Card[] getHand() {
         return hand;
-    }
-
+    }    /**
+     * Gets the current card number.
+     * 
+     * @return The current card number
+     */
     public int getCardNumber() {
         return cardNumber;
     }
 
+    /**
+     * Increases the card number by one and returns the new value.
+     * 
+     * @return The increased card number
+     */
     public int getAndIncreaseCardNumber() {
         cardNumber++;
         return cardNumber;
     }
 
+    /**
+     * Displays the player's hand to the console.
+     * For computer player, cards are hidden.
+     * 
+     * @param isComp true if this is the computer's hand, false otherwise
+     */
     public void writeHand(boolean isComp) {
         if (isComp) {
             for (int i = 0; i < 4; i++) {
@@ -44,7 +77,7 @@ public class Player {
                 if (i != 3) {
                     System.out.print(" | ");
                 } else {
-                    System.out.print("\n");
+                    System.out.println();
                 }
             }
         } else {
@@ -60,14 +93,14 @@ public class Player {
                 if (i != 3) {
                     System.out.print(" | ");
                 } else {
-                    System.out.print("\n");
+                    System.out.println();
                 }
             }
         }
-    }
-
+    }    /**
+     * Displays the player's board to the console.
+     */
     public void writeBoard() {
-
         for (int i = 0; i < 9; i++) {
             if (i == 0) {
                 System.out.print(name + "'s board: ");
@@ -79,11 +112,16 @@ public class Player {
                 System.out.print(" | ");
             }
             if (i == 8) {
-                System.out.print("\n");
+                System.out.println();
             }
         }
     }
 
+    /**
+     * Calculates the sum of all cards on the board.
+     * 
+     * @return The sum of all card values on the board
+     */
     public int getSumOfBoard() {
         int sum = 0;
         for (int i = 0; i < cardNumber + 1; i++) {
@@ -92,10 +130,19 @@ public class Player {
         return sum;
     }
 
+    /**
+     * Adds a card to the board at a specific index.
+     * 
+     * @param card The card to add
+     * @param index The index on the board where the card will be placed
+     */
     public void addToBoard(Card card, int index) {
         this.board[index] = card;
     }
 
+    /**
+     * Resets the player's board to a new empty board.
+     */
     public void reset() {
         board = new Card[9];
         cardNumber = -1;

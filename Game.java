@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Formatter;
 
+/**
+ * The Game class manages the main game logic for Bluejack.
+ * It handles the deck creation, card distribution, game state, and turn management.
+ */
 public class Game {
     private final Random random = new Random();
     private Card[] mainDeck;
@@ -13,11 +17,14 @@ public class Game {
     private Card[] extraDeck;
     private Player player;
     private Player computer;
-    private Scanner sc = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
     private int setNo = 1;
     private String[][] Scores;
-    private boolean isFirst=true;
+    private boolean isFirst = true;
 
+    /**
+     * Creates the main deck of cards with different colors and values.
+     */
     private void create_mainDeck() {
         String[] cardColors = new String[]{"Red", "Blue", "Green", "Yellow"};
         final int TOTAL_NUMBER_OF_CARDS = 40;
@@ -29,8 +36,9 @@ public class Game {
                 k++;
             }
         }
-    }
-
+    }    /**
+     * Shuffles the main deck of cards randomly.
+     */
     private void shuffle_mainDeck() {
         for (int i = 0; i < 150; i++) {
             int m = random.nextInt(mainDeck.length);
@@ -41,6 +49,12 @@ public class Game {
         }
     }
 
+    /**
+     * Uses a card from the main deck and returns it.
+     * If the main deck is almost empty, creates and shuffles an extra deck.
+     * 
+     * @return The card that was taken from the main deck
+     */
     private Card useCardFromMain() {
         boolean isExtra = false;
         if (mainDeck.length == 1) {
